@@ -1,0 +1,60 @@
+REST API to get Projects : 
+
+- Use Bearer Token from your OCP
+- Call GET method on https://api.nokia.ocp-poc-demo.com:6443/apis/project.openshift.io/v1/projects
+
+
+REST API to get filtered Routes in a Project : 
+
+- Use Bearer Token from your OCP
+- Call GET method on https://api.nokia.ocp-poc-demo.com:6443/apis/route.openshift.io/v1/namespaces/<project-name>/routes?labelSelector=console.name
+- console.name lable value is used to display in drop-down.
+
+{
+    "kind": "RouteList",
+    "apiVersion": "route.openshift.io/v1",
+    "items": [
+        {
+            "metadata": {
+                "name": "example",
+                "namespace": "dm-pam",
+                "uid": "d30da1af-b007-4b02-b5e4-7bd2c0902cfe",
+                "resourceVersion": "113349261",
+                "creationTimestamp": "2022-08-02T16:22:49Z",
+                "labels": {
+                    "console.name": "Fuse Console"
+                },
+            "spec": {
+                "host": "example-dm-pam.apps.nokia.ocp-poc-demo.com",
+                "path": "/",
+                "to": {
+                    "kind": "Service",
+                    "name": "example",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": 80
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "example-dm-pam.apps.nokia.ocp-poc-demo.com",
+                        "routerName": "default",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2022-08-02T16:22:49Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None",
+                        "routerCanonicalHostname": "router-default.apps.nokia.ocp-poc-demo.com"
+                    }
+                ]
+            }
+        }
+    ]
+}
+
