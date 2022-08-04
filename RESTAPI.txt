@@ -57,4 +57,3 @@ REST API to get filtered Routes in a Project :
         }
     ]
 }
-
