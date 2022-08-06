@@ -1,7 +1,12 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { FormSelect, FormSelectOption } from "@patternfly/react-core";
 import { useGetProjectList } from "../hooks/SupportQueries";
 import { map } from "lodash";
+import {
+  useSidebarFormContext,
+  useSidebarFormDispatchContext,
+} from "../context/SidebarFormContextProvider";
+import { setProjectValue } from "../reducer/SidebarFormReducer";
 
 interface IProps {
   id: string;
@@ -10,9 +15,11 @@ interface IProps {
 }
 
 export const ProjectDropdown = (props: IProps) => {
-  const [formSelectValue, setFormSelectValue] = useState("");
   const { data } = useGetProjectList();
-
+  const {
+    sidebarFormState: { projectValue },
+  } = useSidebarFormContext();
+  const dispatch = useSidebarFormDispatchContext();
   const projectNameList = useMemo(() => {
     return map(data?.items ?? [], (item) => {
       return {
@@ -23,12 +30,12 @@ export const ProjectDropdown = (props: IProps) => {
   }, [data?.items]);
 
   const onChange = (value: string) => {
-    setFormSelectValue(value);
+    setProjectValue(dispatch, value);
   };
 
   return (
     <FormSelect
-      value={formSelectValue}
+      value={projectValue}
       onChange={onChange}
       aria-label={props.ariaLabel || "FormSelect select"}
       id={props.id}

@@ -1,7 +1,12 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { FormSelect, FormSelectOption } from "@patternfly/react-core";
 import { useGetConsoleByProjectName } from "../hooks/SupportQueries";
 import { map } from "lodash";
+import {
+  useSidebarFormContext,
+  useSidebarFormDispatchContext,
+} from "../context/SidebarFormContextProvider";
+import { setConsoleValue } from "../reducer/SidebarFormReducer";
 
 interface IProps {
   id: string;
@@ -10,10 +15,13 @@ interface IProps {
 }
 
 export const ConsoleDropdown = (props: IProps) => {
-  const [formSelectValue, setFormSelectValue] = useState("");
-  const { data } = useGetConsoleByProjectName("dm-pam");
-  console.log(data);
-
+  const {
+    sidebarFormState: { projectValue, consoleValue },
+  } = useSidebarFormContext();
+  const dispatch = useSidebarFormDispatchContext();
+  const { data } = useGetConsoleByProjectName(projectValue, {
+    enabled: projectValue ? true : false,
+  });
   const consoleURLList = useMemo(() => {
     return map(data?.items ?? [], (item) => {
       return {
@@ -24,12 +32,12 @@ export const ConsoleDropdown = (props: IProps) => {
   }, [data?.items]);
 
   const onChange = (value: string) => {
-    setFormSelectValue(value);
+    setConsoleValue(dispatch, value);
   };
 
   return (
     <FormSelect
-      value={formSelectValue}
+      value={consoleValue}
       onChange={onChange}
       aria-label={props.ariaLabel || "FormSelect select"}
       id={props.id}

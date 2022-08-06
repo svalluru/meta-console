@@ -1,5 +1,9 @@
-import React, { useState } from "react";
 import { FormSelect, FormSelectOption } from "@patternfly/react-core";
+import {
+  useSidebarFormContext,
+  useSidebarFormDispatchContext,
+} from "../context/SidebarFormContextProvider";
+import { setClusterValue } from "../reducer/SidebarFormReducer";
 
 interface IProps {
   id: string;
@@ -8,10 +12,12 @@ interface IProps {
 }
 
 export const ClusterDropdown = (props: IProps) => {
-  const [formSelectValue, setFormSelectValue] = useState("dev");
-
+  const {
+    sidebarFormState: { clusterValue },
+  } = useSidebarFormContext();
+  const dispatch = useSidebarFormDispatchContext();
   const onChange = (value: string) => {
-    setFormSelectValue(value);
+    setClusterValue(dispatch, value);
   };
 
   const options = [
@@ -21,7 +27,7 @@ export const ClusterDropdown = (props: IProps) => {
 
   return (
     <FormSelect
-      value={formSelectValue}
+      value={clusterValue}
       onChange={onChange}
       aria-label={props.ariaLabel || "FormSelect select"}
       id={props.id}
