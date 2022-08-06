@@ -1,7 +1,7 @@
 import axios from "axios";
 import { IConsole, IProjects } from "../models/apiModel";
 
-const getHeaderOption = (options = {}) => {
+const getAPIConfig = (options = {}) => {
   return {
     headers: {
       Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
@@ -13,7 +13,7 @@ const getHeaderOption = (options = {}) => {
 export const getProjectLists = async (): Promise<IProjects> => {
   const response = await axios.get(
     "https://api.nokia.ocp-poc-demo.com:6443/apis/project.openshift.io/v1/projects",
-    getHeaderOption()
+    getAPIConfig()
   );
   return response.data;
 };
@@ -23,7 +23,7 @@ export const getConsoleListByProjectName = async (
 ): Promise<IConsole> => {
   const response = await axios.get(
     `https://api.nokia.ocp-poc-demo.com:6443/apis/route.openshift.io/v1/namespaces/${projectName}/routes?labelSelector=type`,
-    getHeaderOption()
+    getAPIConfig()
   );
   return response.data;
 };
