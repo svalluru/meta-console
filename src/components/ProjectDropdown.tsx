@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { FormSelect, FormSelectOption } from "@patternfly/react-core";
+import { useGetProjectList } from "../hooks/SupportQueries";
+import { map } from "lodash";
 
 interface IProps {
   id: string;
@@ -8,16 +10,21 @@ interface IProps {
 }
 
 export const ProjectDropdown = (props: IProps) => {
-  const [formSelectValue, setFormSelectValue] = useState("project1");
+  const [formSelectValue, setFormSelectValue] = useState("");
+  const { data } = useGetProjectList();
+
+  const projectNameList = useMemo(() => {
+    return map(data?.items ?? [], (item) => {
+      return {
+        value: item?.metadata?.name,
+        label: item?.metadata?.name,
+      };
+    });
+  }, [data?.items]);
 
   const onChange = (value: string) => {
     setFormSelectValue(value);
   };
-
-  const options = [
-    { value: "project1", label: "Project 1", disabled: false },
-    { value: "project2", label: "Project 2", disabled: false },
-  ];
 
   return (
     <FormSelect
@@ -27,9 +34,8 @@ export const ProjectDropdown = (props: IProps) => {
       id={props.id}
       name={props.name}
     >
-      {options.map((option, index) => (
+      {map(projectNameList, (option, index) => (
         <FormSelectOption
-          isDisabled={option.disabled}
           key={index}
           value={option.value}
           label={option.label}
